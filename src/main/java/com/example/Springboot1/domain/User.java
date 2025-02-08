@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -35,6 +36,15 @@ public class User {
     // @StrongPassword(message = "password it nhat 8 ky tu")
     @Size(min = 2, message = "Password ít nhất 2 kí tự")
     private String password;
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
     private String phone;
     private String address;
     private String avatar;
@@ -42,7 +52,8 @@ public class User {
     @ManyToOne // nhieu user thuoc 1 role ne Rolo role
     @JoinColumn(name = "role_id")
     private Role role;
-
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
     @OneToMany(mappedBy = "user") // anh xa ben order
     private List<Order> orders;
 
