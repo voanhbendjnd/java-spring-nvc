@@ -35,38 +35,35 @@
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Manage Orders</h1>
+                                <h1 class="mt-4">Manage Product</h1>
                                 <ol class="breadcrumb mb-4">
                                     <a class="link" href="/admin">Dashboard/</a>
-                                    <a class="link" href="/admin/user">Users</a>
+                                    <a class="link" href="/admin/product">Products</a>
                                 </ol>
                                 <div class="row">
                                     <div class="d-flex justify-content-between"
                                         style="font-family: 'Times New Roman', Times, serif;">
-                                        <div class="display-6">User Details id: ${User.id}
+                                        <div class="display-6">Delete id: ${id}
                                         </div>
                                         <div>
 
                                         </div>
                                     </div>
                                     <hr />
-                                    <div class="card" style="width: 50%;">
-                                        <img class="card-img-top" src="/images/avatar/${User.avatar}"
-                                            alt="Card image cap">
-                                        <div class="card-header">
-                                            Details
+                                    <div class="alert alert-warning" role="alert">
+                                        Do you want delete product with id = ${id}
+                                    </div>
+
+                                    <form:form method="post" modelAttribute="newProduct"
+                                        action="/admin/product/deleteProduct">
+                                        <div class="mb-3">
+                                            <label style="display: none;" class="form-label">Id</label>
+                                            <form:input value="${id}" type="text" class="form-control" path="id"
+                                                style="display :none" />
                                         </div>
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item">ID: ${User.id}</li>
-                                            <li class="list-group-item">Email: ${User.email}</li>
-                                            <li class="list-group-item">Full Name: ${User.fullName}</li>
-                                            <li class="list-group-item">Phone: ${User.phone}</li>
-                                            <li class="list-group-item">Address: ${User.address}</li>
-                                        </ul>
-                                    </div>
-                                    <div>
-                                        <a href="/admin/user" class="btn btn-primary mt-3">Back</a>
-                                    </div>
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form:form>
+
                                 </div>
                             </div>
                         </main>

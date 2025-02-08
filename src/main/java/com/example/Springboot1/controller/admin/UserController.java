@@ -65,7 +65,7 @@ public class UserController {
         return "admin/user/detail";
     }
 
-    @RequestMapping(value = "admin/user/update/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/user/update/{id}", method = RequestMethod.GET)
     public String updateUser(Model model, @PathVariable Long id) {
         User user = this.userService.findById(id);
         model.addAttribute("updateUser", user);
@@ -99,7 +99,7 @@ public class UserController {
             System.out.println(">>>>" + error.getField() + " - " + error.getDefaultMessage());
         }
         if (newUserBindingResult.hasErrors()) {
-            return "/admin/user/create"; // dung redirect se lm mat du lieu
+            return "admin/user/create"; // dung redirect se lm mat du lieu
         }
         String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
         String hashPassword = this.passwordEncoder.encode(hoidanit.getPassword());

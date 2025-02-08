@@ -6,16 +6,23 @@
 
             <head>
                 <!-- // jquery -->
+                <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-                <!--them anh-->
+
+                <!--update picturepicture-->
                 <script>
-                    $(document).ready(() => {
-                        // #productFile là id
+                    $(document).ready(function () {
                         const avatarFile = $("#productFile");
+                        const orgImage = "${updateProduct.image}";
+                        if (orgImage) { // update
+                            const urlImage = "/images/product/" + orgImage;
+                            $("#productPreview").attr("src", urlImage);
+                            $("#productPreview").css("display", "block");
+                        }
                         avatarFile.change(function (e) {
                             const imgURL = URL.createObjectURL(e.target.files[0]);
                             $("#productPreview").attr("src", imgURL);
-                            $("#productPreview").css({ "display": "block" });
+                            $("#productPreview").css("display", "block");
                         });
                     });
                 </script>
@@ -53,20 +60,25 @@
                                 <h1 class="mt-4">Manage Products</h1>
                                 <ol class="breadcrumb mb-4">
                                     <a class="link" href="/admin">Dashboard/</a>
-                                    <a class="link" href="/admin/user">Products</a>
+                                    <a class="link" href="/admin/product">Products</a>
                                 </ol>
                                 <!-- <div class="row"> -->
                                 <div class="col-md-6 col-12 mx-auto">
                                     <h3>Create a products</h3>
                                     <hr />
                                     <form:form method="post" enctype="multipart/form-data"
-                                        action="/admin/product/createPost" modelAttribute="newProduct">
-
+                                        action="/admin/product/update" modelAttribute="updateProduct">
+                                        <div class="row">
+                                            <label class="form-label" style="display: none;">Id</label>
+                                            <form:input path="id" class="form-control" type="text"
+                                                style="display: none;" />
+                                        </div>
                                         <div class="row">
                                             <div class="col">
                                                 <c:set var="errorName">
                                                     <form:errors cssClass="invalid-feedback" path="name" />
                                                 </c:set>
+
                                                 <label class="form-label">Name:</label>
                                                 <form:input type="text"
                                                     class="form-control ${not empty errorName ? 'is-invalid' : ''}"
@@ -106,7 +118,6 @@
                                                     <form:option value="MSI">MSI</form:option>
                                                     <form:option value="SAMSUNG">Samsung</form:option>
                                                     <form:option value="LG">LG</form:option>
-                                                    <form:option value="HP">HP</form:option>
                                                 </form:select>
                                             </div>
                                             <div class="col">
@@ -133,7 +144,10 @@
                                             <div class="mb-3 col-12">
                                                 <img style="max-height: 250px; display: none;" alt="product preview"
                                                     id="productPreview" />
+
                                             </div>
+
+
                                         </div>
                                         <div class="mb-5 col-12">
                                             <button type="submit" class="btn btn-primary">Create</button>
@@ -149,7 +163,7 @@
                 </div>
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
                     crossorigin="anonymous"></script>
-                <script src="js/scripts.js"></script>
+                <!-- <script src="/client/js/scripts.js"></script> -->
                 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" -->
                 <!-- crossorigin="anonymous"></script> -->
                 <!-- <script src="js/chart-area-demo.js"></script>
@@ -157,6 +171,7 @@
                 <!-- <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
                       crossorigin="anonymous"></script> -->
                 <!-- <script src="js/datatables-simple-demo.js"></script> -->
+
             </body>
 
             </html>

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.Springboot1.domain.Role;
 import com.example.Springboot1.domain.User;
+import com.example.Springboot1.domain.dto.RegisterDTO;
 import com.example.Springboot1.repository.RoleRepository;
 import com.example.Springboot1.repository.UserRepository;
 
@@ -47,6 +48,19 @@ public class UserService {
         return this.roleRepository.findByName(name);
     }
 
-   
+    public User registerDTOtoUser(RegisterDTO registerDTO) {
+        User user = new User();
+        user.setFullName(registerDTO.getFirstName() + " " + registerDTO.getLastName());
+        user.setEmail(registerDTO.getEmail());
+        user.setPassword(registerDTO.getPassword());
+        return user;
+    }
 
+    public User getUserByEmail(String email) {
+        return this.userRepository.findByEmail(email);
+    }
+
+    public boolean existsByEmail(String email) {
+        return this.userRepository.existsByEmail(email);
+    }
 }

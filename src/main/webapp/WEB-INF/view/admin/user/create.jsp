@@ -71,25 +71,34 @@
                     </div> -->
                     <div class="row">
                       <div class="col">
+                        <c:set var="errorEmail">
+                          <form:errors path="email" cssClass="invalid-feedback" />
+                        </c:set>
                         <label class="form-label">Email:</label>
-                        <form:input type="email" class="form-control is-invalid" path="email" />
-                        <form:errors path="email" cssClass="invalid-feedback" />
+                        <form:input type="email" class="form-control ${not empty errorEmail ? 'is-invalid' : ''}"
+                          path="email" />
+                        ${errorEmail}
+
                       </div>
                       <div class="col">
-                        <c:set var="errorPassword">
+                        <!-- <c:set var="errorPassword">
                           <form:errors path="password" cssClass="invalid-feedback" />
-                        </c:set>
+                        </c:set> -->
                         <label class="form-label">Password</label>
-                        <form:input type="password" class="form-control ${not empty errorPassword ? 'is-invalid' : ''}"
-                          path="password" />
-                        ${errorPassword}
+                        <form:input type="password" class="form-control" path="password" />
+                        <!-- ${errorPassword}-->
 
                       </div>
                     </div>
                     <div class="row">
                       <div class="col">
+                        <c:set var="errorName">
+                          <form:errors path="fullName" cssClass="invalid-feedback" />
+                        </c:set>
                         <label class="form-label">Full Name</label>
-                        <form:input path="fullName" type="text" class="form-control" />
+                        <form:input path="fullName" type="text"
+                          class="form-control ${not empty errorName ? 'is-invalid' : ''}" />
+                        ${errorName}
                       </div>
                       <div class="col">
                         <label class="form-label">Phone Number</label>
@@ -104,6 +113,7 @@
                       <div class="col">
                         <label class="form-label">Role</label>
                         <form:select class="form-select" path="role.name">
+                          <option>--Select--</option>
                           <form:option value="ADMIN">ADMIN</form:option>
                           <form:option value="USER">USER</form:option>
                         </form:select>

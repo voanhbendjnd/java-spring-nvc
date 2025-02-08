@@ -2,6 +2,8 @@ package com.example.Springboot1.domain;
 
 import java.util.List;
 
+import com.example.Springboot1.service.validator.StrongPassword;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,13 +26,13 @@ public class User {
     private Long id;
     @NotNull
     @Email(message = "Email is not valid", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
-
     @NotEmpty(message = "Email cannot be empty")
     private String email;
     @NotNull
     @Size(min = 3, message = "Tên ít nhất 3 kí tự")
     private String fullName;
     @NotNull
+    // @StrongPassword(message = "password it nhat 8 ky tu")
     @Size(min = 2, message = "Password ít nhất 2 kí tự")
     private String password;
     private String phone;
