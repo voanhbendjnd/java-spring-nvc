@@ -33,6 +33,8 @@
 
                 <!-- Template Stylesheet -->
                 <link href="/client/css/style.css" rel="stylesheet">
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css"
+                    rel="stylesheet">
             </head>
 
             <body>
@@ -130,10 +132,14 @@
                                                     <i class="fa fa-minus"></i>
                                                 </button>
                                             </div>
-                                            <input type="text" class="form-control form-control-sm text-center border-0"
-                                                value="1">
+                                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                            <input class="form-control d-none" type="text" value="${product.id}"
+                                                name="id" />
+                                            <input type="text" class="form-control d-none" name="quantity"
+                                                id="cartDetails0" value="1" />
                                             <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                <button
+                                                    class="btnAddToCartDetail btn border border-secondary rounded-pill">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </div>
@@ -270,6 +276,8 @@
 
                 <!-- Template Javascript -->
                 <script src="/client/js/main.js"></script>
+                <script
+                    srt="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
             </body>
 
             </html>

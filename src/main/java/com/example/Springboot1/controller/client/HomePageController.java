@@ -1,7 +1,11 @@
 package com.example.Springboot1.controller.client;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,10 +39,32 @@ public class HomePageController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // @GetMapping("/")
+    // public String getMethodName(Model model) {
+    // List<Product> products = this.productService.findAll();
+    // model.addAttribute("products", products);
+    // // HttpSession session = request.getSession(false);
+    // return "client/homepage/show";
+    // }
+
     @GetMapping("/")
-    public String getMethodName(Model model) {
-        List<Product> products = this.productService.findAll();
-        model.addAttribute("products", products);
+    public String getMethodName(Model model,
+            @RequestParam(name = "page") Optional<String> pageOptional) {
+        int page = 1;
+        try {
+            if (pageOptional.isPresent()) {
+                page = Integer.parseInt(pageOptional.get());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        Pageable pageable = PageRequest.of(page - 1, 5);
+
+        Page<Product> products = this.productService.findAll(pageable);
+        List<Product> proList = products.getContent();
+        model.addAttribute("products", proList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", products.getTotalPages());
         // HttpSession session = request.getSession(false);
         return "client/homepage/show";
     }

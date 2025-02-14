@@ -2,6 +2,8 @@ package com.example.Springboot1.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.Springboot1.domain.Role;
@@ -62,5 +64,9 @@ public class UserService {
 
     public boolean existsByEmail(String email) {
         return this.userRepository.existsByEmail(email);
+    }
+
+    public Page<User> findAll(Pageable pageable) {
+        return this.userRepository.findAll(pageable);
     }
 }

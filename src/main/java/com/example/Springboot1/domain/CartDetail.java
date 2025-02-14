@@ -1,5 +1,7 @@
 package com.example.Springboot1.domain;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,29 +11,41 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "cartDetail")
-public class CartDetail {
+@Table(name = "cart_detail")
+public class CartDetail implements Serializable {
+    private final static long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    private Long quantity;
+    private long quantity;
 
     private double price;
 
-    public Long getId() {
+    // cart_id: long
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
+
+    // product_id: long
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public Long getQuantity() {
+    public long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(long quantity) {
         this.quantity = quantity;
     }
 
@@ -59,11 +73,4 @@ public class CartDetail {
         this.product = product;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
 }

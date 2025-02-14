@@ -3,8 +3,13 @@ package com.example.Springboot1.controller.admin;
 import com.example.Springboot1.domain.Role;
 import com.example.Springboot1.domain.User;
 
+import java.lang.classfile.ClassFile.Option;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,11 +78,24 @@ public class UserController {
     }
 
     // table
-    @RequestMapping("/admin/user")
-    public String getUserPage(Model model) {
+    @GetMapping("/admin/user")
+    public String getUserPage(Model model,
+            @RequestParam(name = "page") Optional<String> pageOptional) {
+        int page = 1;
+        try {
+            if (pageOptional.isPresent()) {
+                page = Integer.parseInt(pageOptional.get());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        Pageable pageable = PageRequest.of(page - 1, 2);
+        Page<User> user = this.userService.findAll(pageable);
+        List<User> listUser = user.getContent();
         // model.addAttribute("newUser", new User());
-        List<User> listDatabase = this.userService.getAllUsers();
-        model.addAttribute("tableUser", listDatabase); // tableUser on view
+        model.addAttribute("tableUser", listUser);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", user.getTotalPages()); // tableUser on view
         return "admin/user/show";
     }
 

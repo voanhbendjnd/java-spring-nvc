@@ -114,6 +114,35 @@
 
     // Modal Video
     $(document).ready(function () {
+        const currentUrl = new URL(window.location.href);
+    const searchParams = currentUrl.searchParams;
+        const factory = searchParams.get('factory');
+        const target = searchParams.get('target');
+        const price = searchParams.get('price');
+        const sort = searchParams.get('sort');  
+    
+    if (factory) {
+        const factoryArr = factory.split(',');
+        factoryArr.forEach(function (value) {
+            $(`#factoryFilter .form-check-input[value="${value}"]`).prop('checked', true); // Thay đổi: phục hồi trạng thái checkbox từ URL
+        });
+        }
+    if (target) {
+        const targetArr = target.split(',');
+        targetArr.forEach(function (value) {
+            $(`#targetFilter .form-check-input[value="${value}"]`).prop('checked', true); // Thay đổi: phục hồi trạng thái checkbox từ URL
+        });
+        }
+    if (price) {
+        const priceArr = price.split(',');
+        priceArr.forEach(function (value) {
+            $(`#priceFilter .form-check-input[value="${value}"]`).prop('checked', true); // Thay đổi: phục hồi trạng thái checkbox từ URL
+        });
+        }
+          if (sort) {
+        $(`#sortFilter .form-check-input[value="${sort}"]`).prop('checked', true); // Phục hồi trạng thái checkbox của sort từ URL
+    }
+      
         var $videoSrc;
         $('.btn-play').click(function () {
             $videoSrc = $(this).data("src");
@@ -128,7 +157,64 @@
             $("#video").attr('src', $videoSrc);
         })
     });
+    
+    // add active class to header
+    const navElement = $("#navbarCollapse");
+    const currentUrl = window.location.pathname;
+    navElement.find('a.nav-link').each(function () {
+        const link = $(this);
+        const href = link.attr('href');
+        if (href == currentUrl) {
+            link.addClass('active');
+        }
+        else {
+            link.removeClass('active');
+        }
+    });
 
+    $('btnAddToCartHomepage').click(function (event) {
+        event.preventDefault();
+        if (!isLogin()) {
+            $.toast({
+                heading: 'Lỗi thao tac',
+                text: 'Bạn cần đăng nhập tài khoản',
+                positon: 'top-right',
+                icon: 'error'
+            })
+            return;
+        }
+        const productId = $(this).attr('data-product-id');
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
+        const quantity = $("#cartDetails0\\.quantity").val();
+        $.ajax({
+            url: '${window.location.origin}/api/add-product-to-cart',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            type: "POST",
+            data: JSON.stringify({ quantity, productId }),
+            contentType: "application/json",
+            success: function (response) {
+                const sum = +response;
+
+                $("#sumCart").text(sum)
+                $.toast({
+                    heading: "Giỏ hàng",
+                    text: "Thêm sản phẩm vào giỏ hàng thành công",
+                    position: 'top-right',
+                })
+            }
+
+        })
+    });
+    function isLogin() {
+        const navElement = navElement.find('a.a-login');
+        if (childLogin.length > 0) {
+            return false;
+        }
+        return true;
+    }
 
 
     // Product Quantity
@@ -164,6 +250,13 @@
         }
         const input = button.parent().parent().find('input');
         input.val(newVal);
+
+        //set form index
+        const index = input.attr("data-cart-detail-index")
+        const el = document.getElementById(`cartDetails${index}.quantity`);
+        $(el).val(newVal);
+
+
 
         //get price
         const price = input.attr("data-cart-detail-price");
@@ -214,6 +307,85 @@
         formatted = formatted.replace(/\./g, ',');
         return formatted;
     }
+    // $('#btnFilter').click(function (event) {
+    //     event.preventDefault();
+    //     let factoryArr = [];
+    //     let targetArr = [];
+    //     let priceArr = [];
 
+    //     $("#factoryFilter .form-check-input:checked").each(function () {
+    //         factoryArr.push($(this).val());
+    //     });
+    //     $("#targetFilter .form-check-input:checked").each(function () {
+    //         targetArr.push($(this).val());
+    //     });
+    //     $("#priceFilter .form-check-input:checked").each(function () {
+    //         priceArr.push($(this).val());
+    //     });
+
+    //     // let sortValue = $('input[name ="radio-sort"]:checked').val();
+    //     let sortValue = $('input[name="flexRadioDefault"]:checked').val();
+
+
+    //     const currentUrl = new URL(window.location.href);
+    //     const searchParams = currentUrl.searchParams;
+
+    //     searchParams.set('page', '1');
+    //     searchParams.set('sort', sortValue);
+
+    //     if (factoryArr.length > 0) {
+    //         searchParams.set('factory', factoryArr.join(","));
+    //     }
+    //     if (targetArr.length > 0) {
+    //         searchParams.set('target', targetArr.join(","));
+    //     }
+    //     if (priceArr.length > 0) {
+    //         searchParams.set('price', priceArr.join(","));
+    //     }
+    //     window.location.href = currentUrl.toString();
+    // });
+
+     $('#btnFilter').click(function (event) {
+        event.preventDefault();
+        let factoryArr = [];
+        let targetArr = [];
+        let priceArr = [];
+
+        $("#factoryFilter .form-check-input:checked").each(function () {
+            factoryArr.push($(this).val());
+        });
+        $("#targetFilter .form-check-input:checked").each(function () {
+            targetArr.push($(this).val());
+        });
+        $("#priceFilter .form-check-input:checked").each(function () {
+            priceArr.push($(this).val());
+        });
+
+        let sortValue = $('input[name="flexRadioDefault"]:checked').val();
+
+        const currentUrl = new URL(window.location.href);
+        const searchParams = currentUrl.searchParams;
+
+        searchParams.set('page', '1');
+        searchParams.set('sort', sortValue);
+
+        if (factoryArr.length > 0) {
+            searchParams.set('factory', factoryArr.join(","));
+        } else {
+            searchParams.delete('factory');
+        }
+        if (targetArr.length > 0) {
+            searchParams.set('target', targetArr.join(","));
+        } else {
+            searchParams.delete('target');
+        }
+        if (priceArr.length > 0) {
+            searchParams.set('price', priceArr.join(","));
+        } else {
+            searchParams.delete('price');
+        }
+
+        window.location.href = currentUrl.toString();
+    });
 })(jQuery);
 

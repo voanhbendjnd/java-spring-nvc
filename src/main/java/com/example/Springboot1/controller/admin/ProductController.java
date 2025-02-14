@@ -1,7 +1,10 @@
 package com.example.Springboot1.controller.admin;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,16 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import jakarta.*;
 import jakarta.validation.Valid;
 
 import com.example.Springboot1.domain.Product;
-import com.example.Springboot1.domain.Role;
-import com.example.Springboot1.domain.User;
 
 import com.example.Springboot1.service.ProductService;
 
@@ -36,11 +36,30 @@ public class ProductController {
         this.uploadService = uploadService;
     }
 
+    // , defaultValue = "1"
     // hien thi
-    @GetMapping("/admin/product") // link
-    public String getDashboardProduct(Model model) {
-        model.addAttribute("tableProduct", this.productService.findAll()); // lay du lieu tu database hien thi
-        return "admin/product/show"; // tra về
+    @GetMapping("/admin/product")
+    public String getDashboardProduct(Model model,
+            @RequestParam(name = "page") Optional<String> pageOptional) {
+        int page = 1;
+        try {
+            if (pageOptional.isPresent()) {
+                page = Integer.parseInt(pageOptional.get());
+            } else {
+
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        org.springframework.data.domain.Pageable pageable = PageRequest.of(page - 1, 2);
+
+        Page<Product> pr = this.productService.findAll(pageable);
+
+        List<Product> listPro = pr.getContent();
+        model.addAttribute("tableProduct", listPro);
+        model.addAttribute("totalPages", pr.getTotalPages());
+        model.addAttribute("currentPage", page);
+        return "admin/product/show";
     }
 
     @GetMapping("/admin/product/createNew") // hien thi form tai moi san pham
@@ -89,7 +108,8 @@ public class ProductController {
         updateProduct.setPrice(product.getPrice());
         updateProduct.setQuantity(product.getQuantity());
         updateProduct.setShortDesc(product.getShortDesc());
-        updateProduct.setSold(product.getSold());
+
+        updateProduct.setSold(1L);
         updateProduct.setTarget(product.getTarget());
         if (!file.isEmpty()) {
             try {
@@ -109,7 +129,7 @@ public class ProductController {
     public String formDeleteProduct(Model model, @PathVariable Long id) {
         model.addAttribute("id", id);
         model.addAttribute("newProduct", new Product());
-        return "/admin/product/delete";
+        return "admin/product/delete";
     }
 
     @PostMapping("/admin/product/deleteProduct")
@@ -124,7 +144,7 @@ public class ProductController {
     public String viewDetailProduct(Model model, @PathVariable Long id) {
         model.addAttribute("product", this.productService.findById(id));
 
-        return "/admin/product/detail";
+        return "admin/product/detail";
     }
 
 }
